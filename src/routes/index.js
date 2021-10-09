@@ -12,6 +12,7 @@ import Profile from '../components/container/Profile';
 import GettingStarted from '../components/container/GettingStarted';
 import Login from '../components/container/Login';
 import SignUp from '../components/container/SignUp';
+import MyIssues from '../components/container/MyIssues';
 
 const { height, width } = Dimensions.get('window');
 
@@ -27,7 +28,7 @@ const screenOptions = (route, color) => {
             break;
 
         case 'Issues':
-            iconName = 'apps';
+            iconName = 'alert';
             break;
 
         case 'Profile':
@@ -61,6 +62,7 @@ const appRoutes = () => {
     return (
         <Stack.Navigator initialRouteName={'Tabs'} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Tabs" component={Tabs} />
+            <Stack.Screen name="MyIssues" component={MyIssues} />
         </Stack.Navigator>
     );
 };
@@ -68,7 +70,7 @@ const appRoutes = () => {
 const rootRoutes = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={'SplashScreen'} screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName={'appRoutes'} screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="SplashScreen" component={SplashScreen} />
                 <Stack.Screen name="GettingStarted" component={GettingStarted} />
                 <Stack.Screen name="Login" component={Login} />

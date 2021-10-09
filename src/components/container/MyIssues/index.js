@@ -18,7 +18,7 @@ import Issue from './Issue';
 // import Post from './Post';
 import styles from './styles';
 
-const Issues = ({ navigation }) => {
+const MyIssues = ({ navigation }) => {
 
     const issues = [
         {
@@ -66,7 +66,20 @@ const Issues = ({ navigation }) => {
             <SafeAreaView style={styles.notchContainer} />
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.headingContainer}>
-                    <Text style={styles.heading}>{'Issues'}</Text>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Icon 
+                            onPress={() => navigation.goBack()}
+                            name='chevron-left'
+                            size={35}
+                            color={ themeStyleSheet.mainColor }
+                        />
+                        <Text style={styles.heading}>{'My Issues'}</Text>
+                    </View>
 
                     <TouchableOpacity
                         style={styles.profileContainer}
@@ -75,54 +88,6 @@ const Issues = ({ navigation }) => {
                         <Text style={styles.profileText}>
                             {'H'}
                         </Text>
-                    </TouchableOpacity>
-                </View>
-                
-                <View
-                    style={{
-                        backgroundColor: themeStyleSheet.white,
-                        paddingVertical: 10,
-                        marginVertical: 10,
-                        borderRadius: 40,
-                    }}
-                >
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('MyIssues')}
-                        style={{
-                            width: '90%',
-                            alignSelf: 'center',
-                            justifyContent: 'space-between',
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                fontSize: 16,
-                                color: themeStyleSheet.mainColor
-                            }}
-                        >My Issues </Text>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: "bold",
-                                    marginHorizontal: 5,
-                                    color: themeStyleSheet.mainColor
-                                }}
-                            >7</Text>
-                            <Icon
-                                name='chevron-right'
-                                size={24}
-                                color={themeStyleSheet.mainColor}
-                            />
-                        </View>
                     </TouchableOpacity>
                 </View>
 
@@ -167,4 +132,4 @@ const Issues = ({ navigation }) => {
     )
 }
 
-export default Issues;
+export default MyIssues;
