@@ -14,8 +14,8 @@ const { width, height } = Dimensions.get('screen');
 
 const SignUp = ({ navigation }) => {
 
-    // const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    // const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [rePassword, setRePassword] = useState('');
     const [name, setName] = useState('');
@@ -42,8 +42,6 @@ const SignUp = ({ navigation }) => {
             setName(text)
         } else if (type == 'rePassword') {
             setRePassword(text)
-        } else if (type == 'username') {
-            setUsername(text)
         } else if (type == 'number') {
             setNumber(text)
         } else if (type == 'address') {
@@ -55,40 +53,40 @@ const SignUp = ({ navigation }) => {
         let isValid = true;
         let obj = {};
 
-        // if (email) {
-        //     if (!EMAIL_PATTERN.test(email)) {
-        //         isValid = false;
-        //         obj = {
-        //             email: 'Email address is not in the correct format',
-        //         };
-        //     }
-        // } else {
-        //     isValid = false;
-        //     obj = {
-        //         email: 'Email address is required',
-        //     };
-        // }
-
-        // if (onlyEmail == true) {
-        //     if (isValid == true) return isValid;
-        //     else return obj.email;
-        // }
-
-        if (username) {
-            if (username.length < 4) {
+        if (email) {
+            if (!EMAIL_PATTERN.test(email)) {
                 isValid = false;
                 obj = {
-                    ...obj,
-                    password: 'Username must be more than 4 characters',
+                    email: 'Email address is not in the correct format',
                 };
             }
         } else {
             isValid = false;
             obj = {
-                ...obj,
-                password: 'Username is required',
+                email: 'Email address is required',
             };
         }
+
+        if (onlyEmail == true) {
+            if (isValid == true) return isValid;
+            else return obj.email;
+        }
+
+        // if (username) {
+        //     if (username.length < 4) {
+        //         isValid = false;
+        //         obj = {
+        //             ...obj,
+        //             password: 'Username must be more than 4 characters',
+        //         };
+        //     }
+        // } else {
+        //     isValid = false;
+        //     obj = {
+        //         ...obj,
+        //         password: 'Username is required',
+        //     };
+        // }
 
         if (password) {
             if (password.length < 8) {
@@ -194,21 +192,21 @@ const SignUp = ({ navigation }) => {
                                     onChange={text => onChange(text, 'address')}
                                     error={errors.address}
                                 />
-                                <TextField
+                                {/* <TextField
                                     placeholder="Enter Username"
                                     placeholderTextColor={themeStyleSheet.lightgray}
                                     label={"Username"}
                                     onChange={text => onChange(text, 'username')}
                                     error={errors.username}
-                                />
-                                {/* <TextField
+                                /> */}
+                                <TextField
                                     placeholder="Enter Email Address"
                                     placeholderTextColor={themeStyleSheet.lightgray}
                                     label={'Email Address'}
                                     onChange={text => onChange(text, 'email')}
                                     error={errors.email}
                                     textContentType={'emailAddress'}
-                                /> */}
+                                />
                                 <TextField
                                     placeholder="********"
                                     placeholderTextColor={themeStyleSheet.lightgray}
