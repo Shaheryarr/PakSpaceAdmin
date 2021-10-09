@@ -75,7 +75,53 @@ const Login = () => {
     };
 
     const handleLogin = () => {
-        alert('login')
+        Keyboard.dismiss();
+
+        if (validateInput() != true) setErrors(validateInput());
+        else {
+            isInternetConnected().then(() => {
+                let params = {
+                    email,
+                    password,
+                };
+
+                setLoading(true);
+
+                postLoginRequest(params).then(res => {
+                    const { name, image_url, status, isActive, user_type } = res;
+
+                    if (user_type != 'admin') {
+                        alert('This email is not assigned to any organisation');
+                        setLoading(false);
+                    } else {
+                        if (isActive == true) {
+                            let userDetails = {
+                                name,
+                                email,
+                                image_url,
+                            };
+
+                            dispatch(setUser(userDetails)).then(() => {
+                                setLoading(false);
+
+                                navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'appRoutes' }],
+                                });
+                            });
+                        } else {
+                            navigation.navigate('OtpVerification', {
+                                email,
+                            });
+                        }
+                    }
+                })
+            }).catch(err => {
+                Toast.show({
+                    title: 'Please connect to the internet',
+                });
+            });
+        }
     }
 
     const handleForgotPassword = () => {
