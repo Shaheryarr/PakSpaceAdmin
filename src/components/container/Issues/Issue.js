@@ -14,13 +14,34 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import moment from 'moment';
 import Buttons from '../../common/Buttons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Carousel from 'react-native-snap-carousel';
 
 const { width } = Dimensions.get('screen');
-
+const ITEM_WIDTH = Math.round(width * 1);
 const Issue = ({ item }) => {
 
-    const [img, setImg] = useState(false);
+    const [showImg, setShowImg] = useState(false);
+    const [img, setImg] = useState('');
     const [showMap, setShowMap] = useState(false);
+
+    const acceptIssue = () => {
+        alert('good')
+    }
+
+    const toggleImg = () => {
+        setShowImg(prev => !prev);
+    }
+
+    const renderItem = ({ item, index }) => {
+        return (
+            <TouchableOpacity onPress={() => {
+                toggleImg()
+                setImg(item)
+            }} style={styles.carouselItem}>
+                <Image source={{ uri: item }} resizeMode={'contain'} style={{ width: 400, height: 300 }} />
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <>
@@ -80,11 +101,7 @@ const Issue = ({ item }) => {
                             </View>
                         </View>
                     </View>
-                    <View
-                        style={{
-                            marginVertical: 10,
-                        }}
-                    >
+                    <View style={{ marginVertical: 10 }}>
                         <Text
                             style={{
                                 fontWeight: 'bold',
@@ -94,18 +111,16 @@ const Issue = ({ item }) => {
                     </View>
                     <Text style={styles.contentContainer}>{item.content}</Text>
                     {item.images.length > 0 ? (
-                        <TouchableOpacity
-                            style={{ alignItems: 'center' }}
-                            onPress={() => setImg(true)}
-                        >
-                            <Image
-                                source={{ uri: item.images[0] }}
-                                height={100}
-                                width={150}
-                                resizeMode='contain'
-                                style={styles.img}
+                        <View style={styles.carouselContainer}>
+                            <Carousel
+                                data={item.images}
+                                renderItem={renderItem}
+                                sliderWidth={width}
+                                itemWidth={ITEM_WIDTH}
+                                inactiveSlideShift={0}
+                                enableSnap
                             />
-                        </TouchableOpacity>
+                        </View>
                     ) : null}
                     <View style={styles.reactionInfo}>
                         <View style={styles.align}>
@@ -120,6 +135,7 @@ const Issue = ({ item }) => {
                     <View style={styles.likeCommentContainer}>
                         {item.status == 'Pending' ? (
                             <Buttons
+                                onPress={acceptIssue}
                                 type={'primary'}
                                 title={'Accept'}
                             />
@@ -130,15 +146,15 @@ const Issue = ({ item }) => {
                 </View>
             </TouchableOpacity>
             <Modal
-                isVisible={img}
+                isVisible={showImg}
                 style={{ margin: 0 }}
-                onBackdropPress={() => setImg(false)}
-                onBackButtonPress={() => setImg(false)}
+                onBackdropPress={toggleImg}
+                onBackButtonPress={toggleImg}
                 useNativeDriver
             >
                 <View style={styles.modalContainer}>
                     <Image
-                        source={{ uri: item.images[0] }}
+                        source={{ uri: img }}
                         height={150}
                         width={150}
                         resizeMode='contain'

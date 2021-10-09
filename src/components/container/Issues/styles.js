@@ -8,10 +8,10 @@ const styles = StyleSheet.create({
 		width: 400,
 		justifyContent: 'flex-end',
 		alignItems: 'center',
-	  },
-	  map: {
+	},
+	map: {
 		...StyleSheet.absoluteFillObject,
-	  },
+	},
 	headingContainer: {
 		height: height * 0.1,
 		justifyContent: 'space-between',
@@ -137,6 +137,18 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: '50%',
+	},
+	carouselContainer: {
+		flex: 1,
+		marginTop: 20,
+		flexDirection: 'row',
+		justifyContent: 'center'
+	},
+	carouselItem: {
+		height: '90%',
+		width: '100%',
+		justifyContent: 'center',
+		alignItems: 'center'
 	}
 });
 

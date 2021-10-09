@@ -21,7 +21,7 @@ const Issues = ({ navigation }) => {
     const issues = [
         {
             id: 1,
-            images: [],
+            images: ['https://habib.edu.pk/ethnographylab/wp-content/uploads/2017/10/1-7.jpg',],
             title: 'Jauhar Chorangi',
             content: `The road from Jauhar Chorangi to Kamran Chaurangi is broken and needs to be looked at !`,
             created_by: 'Hasan',
@@ -34,7 +34,7 @@ const Issues = ({ navigation }) => {
         },
         {
             id: 2,
-            images: [],
+            images: ['https://i5.paktive.com/f/1436646577_9b13011f77_m.jpg', 'https://media.zameen.com/thumbnails/7175081-400x300.jpeg'],
             title: 'Traffic Light not working',
             content: `The traffic light at disco bakery does not work`,
             created_by: 'Hasan',
