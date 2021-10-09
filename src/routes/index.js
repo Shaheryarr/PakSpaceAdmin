@@ -43,7 +43,7 @@ const screenOptions = (route, color) => {
 
 const Tabs = () => {
     return (
-        <Tab.Navigator initialRouteName={'Issues'} screenOptions={({ route }) => ({
+        <Tab.Navigator initialRouteName={'NewsFeed'} screenOptions={({ route }) => ({
             headerShown: false,
             tabBarIcon: ({ color }) => screenOptions(route, color),
             tabBarActiveTintColor: themeStyleSheet.mainColor,
@@ -68,7 +68,7 @@ const appRoutes = () => {
 const rootRoutes = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={'appRoutes'} screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName={'SplashScreen'} screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="SplashScreen" component={SplashScreen} />
                 <Stack.Screen name="GettingStarted" component={GettingStarted} />
                 <Stack.Screen name="Login" component={Login} />

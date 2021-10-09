@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   textStyleSecondary: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: themeStyleSheet.mainColor,
+    color: themeStyleSheet.white,
   },
   containerPrimary: {
     height: height * 0.05,

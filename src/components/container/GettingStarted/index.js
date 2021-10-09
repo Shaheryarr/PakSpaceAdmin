@@ -32,7 +32,7 @@ const GettingStarted = ({ navigation }) => {
                     <View style={styles.buttonContainer}>
                         <Button
                             type="secondary"
-                            title={'get yourself heard'}
+                            title={'Register your organisation'}
                             onPress={handleSignUp}
                         />
                     </View>

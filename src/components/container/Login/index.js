@@ -90,7 +90,7 @@ const Login = () => {
                     <KeyboardAvoidingView style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center' }} behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
                         <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
                             <Text style={{ ...styles.heading, color: themeStyleSheet.darkGray }}>Welcome Back</Text>
-                            <Text style={{ ...styles.subHeading, color: themeStyleSheet.darkGray }}>Log in to your PakSpace</Text>
+                            <Text style={{ ...styles.subHeading, color: themeStyleSheet.darkGray }}>Log in to your PakSpace Organisation</Text>
 
                             <ScrollView>
                                 <TextField
