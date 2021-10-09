@@ -62,7 +62,7 @@ const OtpVerification = ({ navigation, route }) => {
                             index: 0,
                             routes: [{ name: 'appRoutes' }],
                         });
-                    })
+                    }).catch(err => console.log('Error in creating ', err))
                 }).catch(err => {
                     setLoading(false)
                     setResendCode(true)

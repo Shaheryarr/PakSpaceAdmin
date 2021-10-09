@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, Dimensions, ScrollView } from 'react-native';
+import { SafeAreaView, Text, View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, Dimensions, ScrollView, Image } from 'react-native';
 import { EMAIL_PATTERN, isInternetConnected, themeStyleSheet } from '../../../constants';
-import { postLoginRequest, requestPassword } from '../../../SyncServices';
+import { postImageBase64, postLoginRequest, postSignUpRequest, requestPassword } from '../../../SyncServices';
 import Button from '../../common/Buttons';
 import TextField from '../../common/TextField';
 import styles from './styles';
 import { useToast, Avatar } from 'native-base';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/actions';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width, height } = Dimensions.get('screen');
+
+const config = {
+    mediaType: 'photo',
+    includeBase64: true,
+    quality: 0.1,
+};
 
 const SignUp = ({ navigation }) => {
 
@@ -148,12 +155,79 @@ const SignUp = ({ navigation }) => {
         else return obj;
     };
 
+    const choosePhotoFromLibrary = () => {
+        launchImageLibrary(config, res => {
+            const { assets } = res;
+
+            if (assets?.length) {
+                setImage(assets[0]);
+                console.log(assets[0]);
+            }
+        });
+    };
+
     const handleImage = () => {
-        alert('handleImage')
+        return new Promise((resolve, reject) => {
+            if (!image) resolve();
+            else {
+                let params = {
+                    image_name: image.base64,
+                };
+
+                postImageBase64(params).then(res => {
+                    console.log(res);
+                    resolve(res.message.image_url);
+                }).catch(err => {
+                    reject(err)
+                })
+            }
+        })
     }
 
     const handleRegister = () => {
-        alert('handleRegister')
+        Keyboard.dismiss();
+
+        if (validateInput() != true) setErrors(validateInput());
+        else {
+            isInternetConnected().then(async () => {
+                setLoading(true);
+                
+                const image_url = await handleImage();
+
+                const params = {
+                    name,
+                    email,
+                    password,
+                    image_url,
+                    address,
+                    number,
+                    user_type: 'admin'
+                }
+
+                postSignUpRequest(params).then(res => {
+                    setLoading(false);
+
+                    Toast.show({
+                        title: 'We have sent a one time password to your email. Please verify',
+                        duration: 5000
+                    })
+
+                    navigation.navigate('OtpVerification', {
+                        email,
+                    });
+                }).catch(err => {
+                    setLoading(false);
+
+                    Toast.show({
+                        title: err.response.data.message
+                    })
+                })
+            }).catch(err => {
+                Toast.show({
+                    title: 'Please connect to the internet',
+                });
+            });
+        }
     }
 
     const navigateToLogin = () => {
@@ -171,12 +245,14 @@ const SignUp = ({ navigation }) => {
                             <Text style={{ ...styles.subHeading, color: themeStyleSheet.darkGray }}>Please register your organisation</Text>
 
                             <ScrollView keyboardShouldPersistTaps='handled' showsVerticalScrollIndicator={false}>
-                                <TouchableOpacity style={{ height: height * 0.18, justifyContent: 'center', alignItems: 'center', marginBottom: 10 }} onPress={handleImage}>
-                                    <Avatar bg={themeStyleSheet.lightgray} size='32' source={image ? { uri: image } : require('../../../assets/images/comp.png')} />
-
-                                    <View style={{ position: 'absolute', bottom: 10, right: 120, borderWidth: 1, width: 35, height: 35, borderRadius: 35 / 2, borderColor: themeStyleSheet.extraLightGray, backgroundColor: themeStyleSheet.white, justifyContent: 'center', alignItems: 'center' }}>
-                                        <Icon name={'pencil'} size={20} />
+                                <TouchableOpacity style={{ height: height * 0.18, justifyContent: 'center', alignItems: 'center', marginBottom: 10 }} onPress={choosePhotoFromLibrary}>
+                                    <View style={{ backgroundColor: themeStyleSheet.lightgray, height: 120, width: 120, borderRadius: 60, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                                        <Image source={image ? { uri: image.uri } : require('../../../assets/images/comp.png')} style={{ height: '100%', width: '100%' }} resizeMode='contain' />
                                     </View>
+
+                                    <TouchableOpacity style={{ position: 'absolute', bottom: 10, right: 120, borderWidth: 1, width: 35, height: 35, borderRadius: 35 / 2, borderColor: themeStyleSheet.extraLightGray, backgroundColor: themeStyleSheet.white, justifyContent: 'center', alignItems: 'center' }} onPress={choosePhotoFromLibrary}>
+                                        <Icon name={'pencil'} size={20} />
+                                    </TouchableOpacity>
                                 </TouchableOpacity>
                                 <TextField
                                     placeholder="Enter your Organistion's Name"

@@ -71,7 +71,7 @@ const appRoutes = () => {
 const rootRoutes = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={'appRoutes'} screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName={'SplashScreen'} screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="SplashScreen" component={SplashScreen} />
                 <Stack.Screen name="GettingStarted" component={GettingStarted} />
                 <Stack.Screen name="Login" component={Login} />
