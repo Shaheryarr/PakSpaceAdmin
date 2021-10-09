@@ -18,7 +18,6 @@ import Carousel from 'react-native-snap-carousel';
 
 const { width } = Dimensions.get('screen');
 const ITEM_WIDTH = Math.round(width * 1);
-
 const Issue = ({ item }) => {
 
     const [showImg, setShowImg] = useState(false);
