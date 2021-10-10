@@ -20,7 +20,7 @@ import { postIssue } from '../../../SyncServices';
 const { width } = Dimensions.get('screen');
 const ITEM_WIDTH = Math.round(width * 1);
 
-const Issue = ({ item }) => {
+const Issue = ({ item, socket }) => {
 
     const [showImg, setShowImg] = useState(false);
     const [img, setImg] = useState('');
@@ -37,6 +37,13 @@ const Issue = ({ item }) => {
 
         postIssue(params).then(res => {
             //Update List
+            try {
+                socket.send(JSON.stringify({
+                    message: `accepted ${item.id}`
+                }))
+            } catch (err) {
+                console.log('errrr ', err)
+            }
         }).catch(err => {
             //Show Toast
         })

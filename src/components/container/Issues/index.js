@@ -20,6 +20,8 @@ import Issue from './Issue';
 // import Post from './Post';
 import styles from './styles';
 
+var ws = new WebSocket('ws://gov-tech-project.herokuapp.com/ws/issue/');
+
 const Issues = ({ navigation }) => {
 
     const user = useSelector(state => state.user);
@@ -28,6 +30,22 @@ const Issues = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        // var ws = new WebSocket('ws://gov-tech-project.herokuapp.com/ws/issue/');
+
+        ws.onopen = () => {
+            // connection opened
+
+            // send a message
+            ws.send(JSON.stringify({
+                message: 'Hello sherry here'
+            }));
+        };
+
+        ws.onmessage = (e) => {
+            // a message was received
+            console.log(e.data);
+        };
+
         handleData();
     }, [])
 
@@ -37,7 +55,6 @@ const Issues = ({ navigation }) => {
         getIssues().then(res => {
             setLoading(false);
             setIssues(res.results);
-            console.log('rt', res)
         })
     }
 
@@ -114,11 +131,11 @@ const Issues = ({ navigation }) => {
                             onRefresh={handleData} />}
                         data={(issues).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))}
                         renderItem={({ item, index }) => {
-                            console.log(item.issue_images);
                             return (
                                 <Issue
                                     item={item}
                                     navigation={navigation}
+                                    socket={ws}
                                 />
                             )
                         }}
