@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LOGIN_API, UPLOAD_IMAGE_API, SIGNUP_API, RESEND_OTP_API, OTP_VERIFY_API } from './apis';
+import { LOGIN_API, UPLOAD_IMAGE_API, SIGNUP_API, RESEND_OTP_API, OTP_VERIFY_API, CHECK_AUTH_API } from './apis';
 
 export const postLoginRequest = params => {
     return new Promise((resolve, reject) => {
@@ -68,6 +68,20 @@ export const postOtpVerify = params => {
             resolve(res.data);
         }).catch(err => {
             console.log('postOtpVerify err: ', err.response.data);
+            reject(err);
+        });
+    });
+};
+
+export const getUserAuthentication = () => {
+    return new Promise((resolve, reject) => {
+        axios.get(CHECK_AUTH_API, {
+            withCredentials: true,
+        }).then(res => {
+            console.log('getUserAuthentication res: ', res.data);
+            resolve(res.data);
+        }).catch(err => {
+            console.log('getUserAuthentication err: ', err.response.data);
             reject(err);
         });
     });

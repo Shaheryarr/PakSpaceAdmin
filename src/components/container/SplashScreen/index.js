@@ -6,6 +6,7 @@ import { setUser } from '../../../redux/actions';
 import { handleLogout, isInternetConnected } from '../../../constants';
 import SScreen from 'react-native-splash-screen'
 import styles from './styles';
+import { getUserAuthentication } from '../../../SyncServices';
 
 const SplashScreen = ({ navigation }) => {
 
@@ -26,16 +27,16 @@ const SplashScreen = ({ navigation }) => {
     const handleAuthentication = () => {
         if (user) {
             isInternetConnected().then(() => {
-                // getUserAuthentication().then(res => {
-                //     SScreen.hide()
-                //     navigation.reset({
-                //         index: 0,
-                //         routes: [{ name: 'appRoutes' }],
-                //     });
-                // }).catch(err => {
-                //     SScreen.hide()
-                //     handleLogout(dispatch, navigation)
-                // })
+                getUserAuthentication().then(res => {
+                    SScreen.hide()
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'appRoutes' }],
+                    });
+                }).catch(err => {
+                    SScreen.hide()
+                    handleLogout(dispatch, navigation)
+                })
             }).catch(err => {
                 SScreen.hide()
                 Toast.show({
