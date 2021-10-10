@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LOGIN_API, UPLOAD_IMAGE_API, SIGNUP_API, RESEND_OTP_API, OTP_VERIFY_API, CHECK_AUTH_API } from './apis';
+import { LOGIN_API, UPLOAD_IMAGE_API, SIGNUP_API, RESEND_OTP_API, OTP_VERIFY_API, CHECK_AUTH_API, VIEW_ISSUES, ISSUES } from './apis';
 
 export const postLoginRequest = params => {
     return new Promise((resolve, reject) => {
@@ -86,3 +86,31 @@ export const getUserAuthentication = () => {
         });
     });
 };
+
+export const getIssues = () => {
+    return new Promise((resolve, reject) => {
+        axios.get(VIEW_ISSUES, {
+            withCredentials: true,
+        }).then(res => {
+            console.log('getPosts res: ', res.data);
+            resolve(res.data);
+        }).catch(err => {
+            console.log('getPosts err: ', err.response.data);
+            reject(err);
+        });
+    });
+};
+
+export const postIssue = params => {
+    return new Promise((resolve, reject) => {
+        axios.post(ISSUES, params, {
+            withCredentials: true,
+        }).then(res => {
+            console.log('postOtpVerify res: ', res.data);
+            resolve(res.data);
+        }).catch(err => {
+            console.log('postOtpVerify err: ', err.response.data);
+            reject(err);
+        });
+    });
+}

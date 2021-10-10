@@ -15,6 +15,7 @@ import moment from 'moment';
 import Buttons from '../../common/Buttons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
+import { postIssue } from '../../../SyncServices';
 
 const { width } = Dimensions.get('screen');
 const ITEM_WIDTH = Math.round(width * 1);
@@ -25,8 +26,20 @@ const Issue = ({ item }) => {
     const [img, setImg] = useState('');
     const [showMap, setShowMap] = useState(false);
 
-    const acceptIssue = () => {
-        alert('good')
+    const acceptIssue = (item) => {
+        console.log(item);
+
+        let params = {
+            issue_id: Number(item.id),
+            assigned_to: true,
+            status: 'ACCEPTED'
+        }
+
+        postIssue(params).then(res => {
+            //Update List
+        }).catch(err => {
+            //Show Toast
+        })
     }
 
     const toggleImg = () => {
@@ -37,9 +50,9 @@ const Issue = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => {
                 toggleImg()
-                setImg(item)
+                setImg(item.image_url)
             }} style={styles.carouselItem}>
-                <Image source={{ uri: item }} resizeMode={'contain'} style={{ width: 400, height: 300 }} />
+                <Image source={{ uri: item.image_url }} resizeMode={'contain'} style={{ width: 400, height: 300 }} />
             </TouchableOpacity>
         );
     };
@@ -89,7 +102,7 @@ const Issue = ({ item }) => {
                                         }}
                                     >
                                         <Icon
-                                            onPress={item.location?.length > 0 ? () => setShowMap(true) : () => alert('Pin location not available')}
+                                            onPress={item.longitude && item.lattitude ? () => setShowMap(true) : () => alert('Pin location not available')}
                                             name='location'
                                             size={27}
                                             color={themeStyleSheet.mainColor}
@@ -111,10 +124,10 @@ const Issue = ({ item }) => {
                         >{item.title}</Text>
                     </View>
                     <Text style={styles.contentContainer}>{item.content}</Text>
-                    {item.images.length > 0 ? (
+                    {item.issue_images.length > 0 ? (
                         <View style={styles.carouselContainer}>
                             <Carousel
-                                data={item.images}
+                                data={item.issue_images}
                                 renderItem={renderItem}
                                 sliderWidth={width}
                                 itemWidth={ITEM_WIDTH}
@@ -130,18 +143,18 @@ const Issue = ({ item }) => {
                                 size={20}
                                 color={themeStyleSheet.mainColor}
                             />
-                            <Text>{item.votes}</Text>
+                            <Text>{item.liked_by.length}</Text>
                         </View>
                     </View>
                     <View style={styles.likeCommentContainer}>
                         {item.status == 'Pending' ? (
                             <Buttons
-                                onPress={acceptIssue}
+                                onPress={() => acceptIssue(item)}
                                 type={'primary'}
                                 title={'Accept'}
                             />
                         ) : (
-                            <Text>{`Assigned to ${item.assigned_to}`}</Text>
+                            <Text>{`Assigned to ${item.assigned_to_name}`}</Text>
                         )}
                     </View>
                 </View>
@@ -163,33 +176,35 @@ const Issue = ({ item }) => {
                     ></Image>
                 </View>
             </Modal>
-            <Modal
-                isVisible={showMap}
-                style={{ margin: 0 }}
-                onBackdropPress={() => setShowMap(false)}
-                onBackButtonPress={() => setShowMap(false)}
-                useNativeDriver
-            >
-                <View style={styles.container}>
-                    <MapView
-                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                        style={{ ...StyleSheet.absoluteFillObject }}
-                        region={{
-                            latitude: item.location[0],
-                            longitude: item.location[1],
-                            latitudeDelta: 0.015,
-                            longitudeDelta: 0.0121,
-                        }}
-                    >
-                        <Marker
-                            //   key={index}
-                            coordinate={{ latitude: item.location[0], longitude: item.location[1] }}
-                            title={item.landmark}
-                            description={item.content}
-                        />
-                    </MapView>
-                </View>
-            </Modal>
+            {item.lattitude && item.longitude ? (
+                <Modal
+                    isVisible={showMap}
+                    style={{ margin: 0 }}
+                    onBackdropPress={() => setShowMap(false)}
+                    onBackButtonPress={() => setShowMap(false)}
+                    useNativeDriver
+                >
+                    <View style={styles.container}>
+                        <MapView
+                            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                            style={{ ...StyleSheet.absoluteFillObject }}
+                            region={{
+                                latitude: parseFloat(item.lattitude),
+                                longitude: parseFloat(item.longitude),
+                                latitudeDelta: 0.015,
+                                longitudeDelta: 0.0121,
+                            }}
+                        >
+                            <Marker
+                                //   key={index}
+                                coordinate={{ latitude: parseFloat(item.lattitude), longitude: parseFloat(item.longitude) }}
+                                title={item.landmark}
+                                description={item.content}
+                            />
+                        </MapView>
+                    </View>
+                </Modal>
+            ) : null}
         </>
     )
 }

@@ -9,7 +9,9 @@ import {
     View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSelector } from 'react-redux';
 import { themeStyleSheet } from '../../../constants';
+import { getIssues } from '../../../SyncServices';
 import Issue from './Issue';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { postToRedux } from '../../../redux/actions';
@@ -20,45 +22,23 @@ import styles from './styles';
 
 const Issues = ({ navigation }) => {
 
-    const issues = [
-        {
-            id: 1,
-            images: ['https://habib.edu.pk/ethnographylab/wp-content/uploads/2017/10/1-7.jpg',],
-            title: 'Jauhar Chorangi',
-            content: `The road from Jauhar Chorangi to Kamran Chaurangi is broken and needs to be looked at !`,
-            created_by: 'Hasan',
-            votes: 20,
-            assigned_to: '',
-            status: 'Pending',
-            created_at: 1633770171919,
-            location: [24.912266, 67.125673],
-            landmark: 'Jauhar'
-        },
-        {
-            id: 2,
-            images: ['https://i5.paktive.com/f/1436646577_9b13011f77_m.jpg', 'https://media.zameen.com/thumbnails/7175081-400x300.jpeg'],
-            title: 'Traffic Light not working',
-            content: `The traffic light at disco bakery does not work`,
-            created_by: 'Hasan',
-            votes: 20,
-            assigned_to: 'FixIt',
-            status: 'Accepted',
-            created_at: 1612760171919,
-            location: [],
-            landmark: 'Gulshan'
-        }
-    ]
+    const user = useSelector(state => state.user);
 
+    const [issues, setIssues] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        getIssues();
+        handleData();
     }, [])
 
-    const getIssues = () => {
+    const handleData = () => {
         setLoading(true);
-        // get issues here
-        setLoading(false);
+
+        getIssues().then(res => {
+            setLoading(false);
+            setIssues(res.results);
+            console.log('rt', res)
+        })
     }
 
     return (
@@ -77,7 +57,7 @@ const Issues = ({ navigation }) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                
+
                 <View
                     style={{
                         backgroundColor: themeStyleSheet.white,
@@ -131,9 +111,10 @@ const Issues = ({ navigation }) => {
                         refreshControl={<RefreshControl
                             colors={["#9Bd35A", "#689F38"]}
                             refreshing={loading}
-                            onRefresh={getIssues} />}
+                            onRefresh={handleData} />}
                         data={(issues).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))}
                         renderItem={({ item, index }) => {
+                            console.log(item.issue_images);
                             return (
                                 <Issue
                                     item={item}
